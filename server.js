@@ -1,4 +1,4 @@
-// server.js final pour Render + FedaPay (production) + webhook
+// server.js final pour Render + FedaPay production + webhook + email
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
@@ -15,6 +15,7 @@ app.use(express.static("public"));
 DATABASE
 ----------------------- */
 const db = new sqlite3.Database("./database.db");
+
 db.run(`
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,24 +35,24 @@ app.post("/create-payment", async (req, res) => {
   if (!email) return res.status(400).send("Email requis");
 
   try {
-    // Création de la transaction sur FedaPay
     const response = await axios.post(
       "https://api.fedapay.com/v1/transactions",
       {
-        transaction: {
-          description: "Formation Anim-Formation",
-          amount: 10000,             // en FCFA
-          currency: { iso: "XOF" },
-          metadata: { email },
-          callback_url: "https://anim-formation.onrender.com/confirmation.html"
-        }
+        description: "Formation Anim-Formation",
+        amount: 10000, // Montant en FCFA
+        currency: { iso: "XOF" },
+        metadata: { email },
+        callback_url: "https://anim-formation.onrender.com/confirmation.html"
       },
       {
-        headers: { Authorization: `Bearer ${process.env.FEDAPAY_SECRET}` }
+        headers: {
+          Authorization: `Bearer ${process.env.FEDAPAY_SECRET}`,
+          "Content-Type": "application/json"
+        }
       }
     );
 
-    // Redirection vers la page de paiement FedaPay
+    // Redirection front-end vers FedaPay
     res.json({ payment_url: response.data.v1_url });
 
   } catch (err) {
@@ -75,10 +76,10 @@ app.post("/webhook", async (req, res) => {
       db.run(
         `INSERT OR REPLACE INTO users (email, token, paid) VALUES (?, ?, 1)`,
         [email, token],
-        async function (err) {
+        async function(err) {
           if (err) return console.log("Erreur DB webhook:", err);
 
-          // Envoi mail avec lien sécurisé
+          // Envoi email avec lien sécurisé
           const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
