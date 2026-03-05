@@ -33,89 +33,75 @@ ip TEXT
 CREATION PAIEMENT FEDAPAY
 ----------------------- */
 
-app.post("/create-payment", async (req, res) => {
+app.post("/confirm-payment", async (req,res)=>{
 
-const { email } = req.body;
+const {email,transaction_id} = req.body;
 
-if(!email){
-return res.status(400).json({error:"Email requis"});
+if(!email) return res.sendStatus(400);
+
+/* créer token sécurisé */
+
+const token = crypto.randomBytes(32).toString("hex");
+
+/* enregistrer */
+
+db.run(
+
+`INSERT OR REPLACE INTO users (email,token,paid)
+VALUES (?,?,1)`,
+
+[email,token],
+
+async function(err){
+
+if(err){
+console.log(err);
+return res.sendStatus(500);
 }
 
-try{
+/* email */
 
-const response = await axios.post(
+const transporter = nodemailer.createTransport({
 
-"https://api.fedapay.com/v1/transactions",
+service:"gmail",
 
-{
-transaction:{
-
-description:"Formation Anim-Formation",
-
-amount:10000,
-
-currency_id:952, // FCFA
-
-callback_url:"https://anim-formation.onrender.com/confirmation.html",
-
-customer:{
-email:email
-},
-
-metadata:{
-email:email
+auth:{
+user:process.env.EMAIL_USER,
+pass:process.env.EMAIL_PASS
 }
 
-}
+});
 
-},
+await transporter.sendMail({
 
-{
-headers:{
-Authorization:`Bearer ${process.env.FEDAPAY_SECRET}`,
-"Content-Type":"application/json"
-}
+from:"Anim-Formation",
+
+to:email,
+
+subject:"Votre accès Anim-Formation 🎉",
+
+html:`
+
+<h2>Paiement confirmé</h2>
+
+<p>Accédez à votre formation :</p>
+
+<a href="https://anim-formation.onrender.com/formation/${token}">
+Accéder à la formation
+</a>
+
+`
+
+});
+
+res.sendStatus(200);
+
 }
 
 );
 
-console.log("FedaPay response:",response.data);
-
-/* récupération url paiement */
-
-const payment_url =
-response.data.transaction.v1_url ||
-response.data.transaction.url;
-
-if(!payment_url){
-
-return res.status(500).json({
-error:"Lien paiement introuvable"
 });
 
-}
-
-res.json({
-payment_url:payment_url
-});
-
-}catch(err){
-
-console.log("Erreur FedaPay:");
-
-if(err.response){
-console.log(err.response.data);
-}else{
-console.log(err);
-}
-
-res.status(500).json({
-error:"Erreur paiement"
-});
-
-}
-
-});
 
 /* -----------------------
 WEBHOOK FEDAPAY
