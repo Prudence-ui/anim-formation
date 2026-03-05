@@ -36,21 +36,23 @@ app.post("/create-payment", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://api.fedapay.com/v1/transactions",
-      {
-        description: "Formation Anim-Formation",
-        amount: 10000, // Montant en FCFA
-        currency: { iso: "XOF" },
-        metadata: { email },
-        callback_url: "https://anim-formation.onrender.com/confirmation.html"
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.FEDAPAY_SECRET}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
+  "https://api.fedapay.com/v1/transactions",
+  {
+    transaction: {      // <-- obligatoire
+      description: "Formation Anim-Formation",
+      amount: 10000,
+      currency: { iso: "XOF" },
+      metadata: { email },
+      callback_url: "https://anim-formation.onrender.com/confirmation.html"
+    }
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${process.env.FEDAPAY_SECRET}`,
+      "Content-Type": "application/json"
+    }
+  }
+);
 
     // Redirection front-end vers FedaPay
     res.json({ payment_url: response.data.v1_url });
