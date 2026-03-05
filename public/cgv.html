@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGV - Anim-Formation</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+<h1 class="fade-in">Conditions Générales de Vente</h1>
+</header>
+
+<section class="section fade-in">
+<h2>Article 1 — Objet</h2>
+<p>
+Les présentes CGV régissent la vente de la formation en ligne <strong>Anim-Formation</strong>.  
+En achetant la formation, vous acceptez ces conditions.
+</p>
+
+<h2>Article 2 — Prix</h2>
+<p>
+La formation est vendue au tarif de <strong>20€ / 10 000 FCFA</strong>, taxes incluses.
+</p>
+
+<h2>Article 3 — Paiement</h2>
+<ul>
+<li>Paiement sécurisé via FedaPay</li>
+<li>Un email valide est requis pour recevoir l’accès</li>
+<li>Transaction validée après confirmation du paiement</li>
+</ul>
+
+<h2>Article 4 — Livraison</h2>
+<p>
+Après paiement, un email automatique vous enverra l’accès sécurisé à la formation.
+</p>
+
+<h2>Article 5 — Propriété intellectuelle</h2>
+<p>
+Tout le contenu de la formation est protégé par droits d’auteur.  
+Partage non autorisé interdit.
+</p>
+
+<h2>Article 6 — Remboursement</h2>
+<p>
+Aucun remboursement après envoi de la formation (produit numérique).
+</p>
+
+<h2>Article 7 — Responsabilité</h2>
+<p>
+Les résultats dépendent de l’engagement de l’apprenant.  
+Anim-Formation n’est pas responsable de l’utilisation faite du contenu.
+</p>
+</section>
+
+<footer class="footer fade-in">
+<div class="footer-container">
+<div class="footer-col">
+<h3>Anim-Formation</h3>
+<p>Plateforme spécialisée dans la création et la monétisation de vidéos animées.</p>
+</div>
+<div class="footer-col">
+<h4>Navigation</h4>
+<ul>
+<li><a href="index.html">Accueil</a></li>
+<li><a href="formation.html">Formation</a></li>
+<li><a href="apropos.html">À propos</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Informations légales</h4>
+<ul>
+<li><a href="cgv.html">CGV</a></li>
+<li><a href="confidentialite.html">Confidentialité</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<p><i class="fa-solid fa-envelope"></i> contact@anim-formation.com</p>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Anim-Formation — Tous droits réservés</p>
+</div>
+</footer>
+
+<script>
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold:0.2 };
+const appearOnScroll = new IntersectionObserver(function(entries, observer){
+entries.forEach(entry=>{
+if(!entry.isIntersecting) return;
+entry.target.classList.add('appear');
+observer.unobserve(entry.target);
+});
+}, appearOptions);
+faders.forEach(fader=>appearOnScroll.observe(fader));
+</script>
+
+</body>
+</html>

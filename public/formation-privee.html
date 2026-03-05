@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Espace Formation - Anim-Formation</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:#0f172a;
+color:white;
+}
+
+/* HEADER */
+
+.header{
+background:#020617;
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#a78bfa;
+}
+
+
+/* LAYOUT */
+
+.dashboard{
+display:flex;
+min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:300px;
+background:#020617;
+padding:30px;
+border-right:1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar h2{
+margin-bottom:20px;
+font-size:18px;
+}
+
+.module{
+margin-bottom:15px;
+padding:12px;
+border-radius:8px;
+cursor:pointer;
+background:#1e293b;
+transition:0.3s;
+}
+
+.module:hover{
+background:#7c3aed;
+}
+
+/* CONTENT */
+
+.content{
+flex:1;
+padding:40px;
+}
+
+/* VIDEO */
+
+.video-container{
+background:#020617;
+padding:20px;
+border-radius:10px;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+
+video{
+width:100%;
+border-radius:10px;
+margin-top:10px;
+}
+
+/* DESCRIPTION */
+
+.lesson-text{
+margin-top:20px;
+line-height:1.7;
+color:#cbd5e1;
+}
+
+/* WHATSAPP */
+
+.whatsapp-box{
+margin-top:40px;
+padding:25px;
+background:#1e293b;
+border-radius:10px;
+text-align:center;
+}
+
+.btn-whatsapp{
+display:inline-block;
+margin-top:15px;
+background:#22c55e;
+padding:15px 30px;
+border-radius:50px;
+text-decoration:none;
+color:white;
+font-weight:bold;
+transition:0.3s;
+}
+
+.btn-whatsapp:hover{
+transform:scale(1.05);
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.dashboard{
+flex-direction:column;
+}
+
+.sidebar{
+width:100%;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="logo">
+Anim-Formation
+</div>
+
+</header>
+
+<div class="dashboard">
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>Modules de la formation</h2>
+
+<div class="module" onclick="loadVideo('videos/module1.mp4','Introduction à la création de vidéos animées')">
+Module 1 — Introduction
+</div>
+
+<div class="module" onclick="loadVideo('videos/module2.mp4','Créer votre premier personnage animé')">
+Module 2 — Création de personnage
+</div>
+
+<div class="module" onclick="loadVideo('videos/module3.mp4','Animation et mouvements')">
+Module 3 — Animation
+</div>
+
+<div class="module" onclick="loadVideo('videos/module4.mp4','Montage et optimisation')">
+Module 4 — Montage
+</div>
+
+<div class="module" onclick="loadVideo('videos/module5.mp4','Stratégies de monétisation')">
+Module 5 — Monétisation
+</div>
+
+<div class="module" onclick="loadVideo('videos/module6.mp4','Comment gagner vos premiers 200€ avec ces vidéos')">
+Module 6 — Bonus
+</div>
+
+</div>
+
+
+
+<!-- CONTENT -->
+
+<div class="content">
+
+<h1 id="lesson-title">
+Bienvenue dans votre formation
+</h1>
+
+<div class="video-container">
+
+<video 
+id="lesson-video"
+controls
+controlsList="nodownload"
+oncontextmenu="return false"
+disablePictureInPicture
+>
+<source src="videos/module1.mp4" type="video/mp4">
+</video>
+
+<div class="lesson-text" id="lesson-text">
+
+Bienvenue dans **Anim-Formation**.
+
+Dans cette formation vous allez apprendre à :
+
+• créer des vidéos animées professionnelles  
+• développer une audience sur les réseaux sociaux  
+• transformer vos vidéos en source de revenus  
+
+Prenez le temps de suivre chaque module dans l'ordre.
+
+</div>
+
+</div>
+
+
+<!-- WHATSAPP -->
+
+<div class="whatsapp-box">
+
+<h2>Communauté privée</h2>
+
+<p>
+
+Vous pouvez rejoindre notre **groupe privé WhatsApp**  
+pour poser vos questions, partager vos créations  
+et progresser avec les autres membres.
+
+</p>
+
+<a href="TON_LIEN_WHATSAPP" target="_blank" class="btn-whatsapp">
+
+Rejoindre le groupe WhatsApp
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+
+<script>
+
+function loadVideo(video,title){
+
+document.getElementById("lesson-video").src = video;
+
+document.getElementById("lesson-title").innerText = title;
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+</script>
+
+<script>
+
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.onkeydown = function(e) {
+
+if (e.keyCode == 123) {
+return false;
+}
+
+if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
+return false;
+}
+
+if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
+return false;
+}
+
+if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
+return false;
+}
+
+}
+
+</script>
+
+</body>
+</html>

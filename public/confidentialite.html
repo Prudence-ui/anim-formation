@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politique de Confidentialité - Anim-Formation</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+<h1 class="fade-in">Politique de Confidentialité</h1>
+</header>
+
+<section class="section fade-in">
+<h2>Introduction</h2>
+<p>
+Chez <strong>Anim-Formation</strong>, la protection de vos données personnelles est une priorité.  
+Nous nous engageons à les utiliser de manière transparente et sécurisée.
+</p>
+
+<h2>Données collectées</h2>
+<ul>
+<li>Email pour l’envoi de la formation</li>
+<li>Informations de paiement strictement nécessaires</li>
+<li>Données anonymisées pour améliorer nos services</li>
+</ul>
+
+<h2>Utilisation des données</h2>
+<ul>
+<li>Traiter vos paiements</li>
+<li>Envoyer l’accès sécurisé à la formation</li>
+<li>Communiquer pour support et mises à jour</li>
+</ul>
+
+<h2>Protection des données</h2>
+<p>
+Nous appliquons des mesures techniques et organisationnelles pour protéger vos informations.  
+Aucune donnée n’est partagée avec des tiers non autorisés.
+</p>
+
+<h2>Droits des utilisateurs</h2>
+<ul>
+<li>Accès à vos données personnelles</li>
+<li>Modification ou suppression sur demande</li>
+<li>Retrait du consentement à tout moment</li>
+</ul>
+
+<p>Pour toute question : <strong>contact@anim-formation.com</strong></p>
+</section>
+
+<footer class="footer fade-in">
+<div class="footer-container">
+<div class="footer-col">
+<h3>Anim-Formation</h3>
+<p>Plateforme spécialisée dans la création et la monétisation de vidéos animées.</p>
+</div>
+<div class="footer-col">
+<h4>Navigation</h4>
+<ul>
+<li><a href="index.html">Accueil</a></li>
+<li><a href="formation.html">Formation</a></li>
+<li><a href="apropos.html">À propos</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Informations légales</h4>
+<ul>
+<li><a href="cgv.html">CGV</a></li>
+<li><a href="confidentialite.html">Confidentialité</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<p><i class="fa-solid fa-envelope"></i> contact@anim-formation.com</p>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Anim-Formation — Tous droits réservés</p>
+</div>
+</footer>
+
+<script>
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold:0.2 };
+const appearOnScroll = new IntersectionObserver(function(entries, observer){
+entries.forEach(entry=>{
+if(!entry.isIntersecting) return;
+entry.target.classList.add('appear');
+observer.unobserve(entry.target);
+});
+}, appearOptions);
+faders.forEach(fader=>appearOnScroll.observe(fader));
+</script>
+
+</body>
+</html>

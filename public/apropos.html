@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>À propos - Anim-Formation</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+<h1 class="fade-in">Anim-Formation</h1>
+</header>
+
+<section class="section fade-in">
+<h1>Notre mission</h1>
+<p>
+Chez <strong>Anim-Formation</strong>, nous croyons que chaque créateur mérite de transformer sa créativité en revenus.  
+Notre objectif est de vous guider, pas à pas, pour créer des vidéos animées virales et professionnelles.
+</p>
+
+<h2>Pourquoi nous choisir ?</h2>
+<ul>
+<li>Formation structurée étape par étape</li>
+<li>Accessible même aux débutants</li>
+<li>Techniques de monétisation éprouvées</li>
+<li>Support et mises à jour inclus</li>
+</ul>
+
+<h2>Notre vision</h2>
+<p>
+Nous voulons que chaque étudiant devienne capable de créer des vidéos qui captent l’attention et génèrent des revenus de manière durable.
+</p>
+
+<a href="contact.html" class="btn-premium">Contactez-nous</a>
+</section>
+
+<footer class="footer fade-in">
+<div class="footer-container">
+<div class="footer-col">
+<h3>Anim-Formation</h3>
+<p>Plateforme spécialisée dans la création et la monétisation de vidéos animées.</p>
+</div>
+<div class="footer-col">
+<h4>Navigation</h4>
+<ul>
+<li><a href="index.html">Accueil</a></li>
+<li><a href="formation.html">Formation</a></li>
+<li><a href="apropos.html">À propos</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Informations légales</h4>
+<ul>
+<li><a href="cgv.html">CGV</a></li>
+<li><a href="confidentialite.html">Confidentialité</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<p><i class="fa-solid fa-envelope"></i> contact@anim-formation.com</p>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Anim-Formation — Tous droits réservés</p>
+</div>
+</footer>
+
+<script>
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold:0.2 };
+const appearOnScroll = new IntersectionObserver(function(entries, observer){
+entries.forEach(entry=>{
+if(!entry.isIntersecting) return;
+entry.target.classList.add('appear');
+observer.unobserve(entry.target);
+});
+}, appearOptions);
+faders.forEach(fader=>appearOnScroll.observe(fader));
+</script>
+
+</body>
+</html>

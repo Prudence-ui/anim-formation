@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Anim-Formation</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <header class="header">
+<div class="logo">CONTACTEZ-NOUS</div>
+<nav>
+<a href="index.html">Accueil</a>
+<a href="paiement.html">Formation</a>
+<a href="contact.html">Contact</a>
+</nav>
+</header>
+
+
+
+<section class="section fade-in">
+
+<h2>Nous sommes là pour vous aider</h2>
+<p>
+Pour toute question sur la formation, le paiement ou le support technique, notre équipe répond rapidement et efficacement.
+</p>
+
+<h2>Informations de contact</h2>
+<ul>
+<li><i class="fa-solid fa-envelope"></i> Email : contact@anim-formation.com</li>
+<li><i class="fa-solid fa-phone"></i> Téléphone : +228 90 00 00 00</li>
+<li><i class="fa-solid fa-clock"></i> Disponibilité : 7j/7</li>
+</ul>
+
+<h2>Envoyer un message</h2>
+<form class="contact-form">
+<input type="text" placeholder="Votre nom" required class="input-field">
+<input type="email" placeholder="Votre email" required class="input-field">
+<textarea placeholder="Votre message" required class="input-field" style="height:150px;"></textarea>
+<button type="submit" class="btn-premium">Envoyer</button>
+</form>
+
+</section>
+
+<footer class="footer fade-in">
+<div class="footer-container">
+<div class="footer-col">
+<h3>Anim-Formation</h3>
+<p>Plateforme spécialisée dans la création et la monétisation de vidéos animées.</p>
+</div>
+<div class="footer-col">
+<h4>Navigation</h4>
+<ul>
+<li><a href="index.html">Accueil</a></li>
+<li><a href="formation.html">Formation</a></li>
+<li><a href="apropos.html">À propos</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Informations légales</h4>
+<ul>
+<li><a href="cgv.html">CGV</a></li>
+<li><a href="confidentialite.html">Confidentialité</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<p><i class="fa-solid fa-envelope"></i> contact@anim-formation.com</p>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Anim-Formation — Tous droits réservés</p>
+</div>
+</footer>
+
+<script>
+const faders = document.querySelectorAll('.fade-in');
+const appearOptions = { threshold:0.2 };
+const appearOnScroll = new IntersectionObserver(function(entries, observer){
+entries.forEach(entry=>{
+if(!entry.isIntersecting) return;
+entry.target.classList.add('appear');
+observer.unobserve(entry.target);
+});
+}, appearOptions);
+faders.forEach(fader=>appearOnScroll.observe(fader));
+</script>
+
+</body>
+</html>
