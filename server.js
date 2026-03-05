@@ -37,79 +37,85 @@ app.post("/create-payment", async (req, res) => {
 
 const { email } = req.body;
 
-if (!email) {
+if(!email){
 return res.status(400).json({error:"Email requis"});
 }
 
-try {
+try{
 
 const response = await axios.post(
+
 "https://api.fedapay.com/v1/transactions",
+
 {
 transaction:{
+
 description:"Formation Anim-Formation",
+
 amount:10000,
-currency:{iso:"XOF"},
-metadata:{email:email},
-callback_url:"https://anim-formation.onrender.com/confirmation.html"
-}
+
+currency_id:952, // FCFA
+
+callback_url:"https://anim-formation.onrender.com/confirmation.html",
+
+customer:{
+email:email
 },
+
+metadata:{
+email:email
+}
+
+}
+
+},
+
 {
 headers:{
 Authorization:`Bearer ${process.env.FEDAPAY_SECRET}`,
 "Content-Type":"application/json"
 }
 }
+
 );
 
-console.log("Réponse FedaPay :",response.data);
+console.log("FedaPay response:",response.data);
 
-/* récupération URL paiement */
+/* récupération url paiement */
 
-let paymentUrl=null;
+const payment_url =
+response.data.transaction.v1_url ||
+response.data.transaction.url;
 
-if(response.data.transaction && response.data.transaction.v1_url){
-paymentUrl=response.data.transaction.v1_url;
-}
-
-if(response.data.transaction && response.data.transaction.url){
-paymentUrl=response.data.transaction.url;
-}
-
-if(!paymentUrl){
-
-console.log("Erreur : URL paiement introuvable");
+if(!payment_url){
 
 return res.status(500).json({
-error:"Erreur FedaPay"
+error:"Lien paiement introuvable"
 });
 
 }
 
-/* renvoyer url au front */
-
 res.json({
-payment_url:paymentUrl
+payment_url:payment_url
 });
 
-}catch(error){
+}catch(err){
 
-console.log("Erreur FedaPay :");
+console.log("Erreur FedaPay:");
 
-if(error.response){
-console.log(error.response.data);
+if(err.response){
+console.log(err.response.data);
 }else{
-console.log(error);
+console.log(err);
 }
 
 res.status(500).json({
-error:"Erreur création paiement"
+error:"Erreur paiement"
 });
 
 }
 
 });
-
 
 /* -----------------------
 WEBHOOK FEDAPAY
