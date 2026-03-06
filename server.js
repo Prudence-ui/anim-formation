@@ -1,15 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
-const nodemailer = require("nodemailer");
 const sqlite3 = require("sqlite3").verbose();
 const crypto = require("crypto");
+const { Resend } = require("resend");
 require("dotenv").config();
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
+
+/* RESEND */
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /* DATABASE */
 
@@ -41,6 +45,8 @@ error:"Données manquantes"
 
 try{
 
+/* vérifier transaction FedaPay */
+
 const response = await axios.get(
 
 `https://api.fedapay.com/v1/transactions/${transaction_id}`,
@@ -53,7 +59,7 @@ Authorization:`Bearer ${process.env.FEDAPAY_SECRET}`
 
 );
 
-/* CORRECTION ICI */
+/* récupérer transaction */
 
 const transaction = response.data.v1.transaction;
 
@@ -65,9 +71,11 @@ error:"Paiement non validé"
 
 }
 
-/* créer token */
+/* créer token sécurisé */
 
 const token = crypto.randomBytes(32).toString("hex");
+
+/* enregistrer utilisateur */
 
 db.run(
 
@@ -83,41 +91,36 @@ console.log(err);
 return res.sendStatus(500);
 }
 
-/* EMAIL */
-
-const transporter = nodemailer.createTransport({
-
-service:"gmail",
-
-auth:{
-user:process.env.EMAIL_USER,
-pass:process.env.EMAIL_PASS
-}
-
-});
+/* lien formation */
 
 const accessLink =
 `https://anim-formation.onrender.com/formation/${token}`;
 
-await transporter.sendMail({
+/* envoyer email */
 
-from:`Anim-Formation <${process.env.EMAIL_USER}>`,
+try{
 
-to:email,
+await resend.emails.send({
 
-subject:"Votre accès à Anim-Formation 🎉",
+from: "Anim-Formation <onboarding@resend.dev>",
+
+to: email,
+
+subject: "Votre accès à Anim-Formation 🎉",
 
 html:`
 
-<h2>Paiement confirmé</h2>
+<h2>Paiement confirmé 🎉</h2>
 
 <p>Merci pour votre achat.</p>
 
-<p>Accédez à votre formation :</p>
+<p>Accédez à votre formation ici :</p>
 
 <a href="${accessLink}">
 Accéder à la formation
 </a>
+
+<p>Ce lien est personnel.</p>
 
 `
 
@@ -125,7 +128,13 @@ Accéder à la formation
 
 console.log("EMAIL ENVOYÉ");
 
-/* SUCCESS */
+}catch(mailError){
+
+console.log("Erreur email :",mailError);
+
+}
+
+/* renvoyer succès */
 
 res.json({
 success:true
