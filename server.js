@@ -53,7 +53,9 @@ Authorization:`Bearer ${process.env.FEDAPAY_SECRET}`
 
 );
 
-const transaction = response.data.transaction;
+/* CORRECTION ICI */
+
+const transaction = response.data.v1.transaction;
 
 if(transaction.status !== "approved"){
 
@@ -69,7 +71,7 @@ const token = crypto.randomBytes(32).toString("hex");
 
 db.run(
 
-`INSERT INTO users (email,token,paid)
+`INSERT OR REPLACE INTO users (email,token,paid)
 VALUES (?,?,1)`,
 
 [email,token],
@@ -81,7 +83,7 @@ console.log(err);
 return res.sendStatus(500);
 }
 
-/* envoyer email */
+/* EMAIL */
 
 const transporter = nodemailer.createTransport({
 
@@ -96,8 +98,6 @@ pass:process.env.EMAIL_PASS
 
 const accessLink =
 `https://anim-formation.onrender.com/formation/${token}`;
-
-try{
 
 await transporter.sendMail({
 
@@ -125,13 +125,7 @@ Accéder à la formation
 
 console.log("EMAIL ENVOYÉ");
 
-}catch(mailError){
-
-console.log("Erreur email :",mailError);
-
-}
-
-/* redirection */
+/* SUCCESS */
 
 res.json({
 success:true
@@ -143,7 +137,7 @@ success:true
 
 }catch(error){
 
-console.log(error.response?.data || error);
+console.log("ERREUR FEDA :",error.response?.data || error);
 
 res.status(500).json({
 error:"Erreur vérification paiement"
@@ -183,7 +177,7 @@ __dirname+"/public/formation-privee.html"
 
 });
 
-/* SERVEUR */
+/* SERVER */
 
 const PORT = process.env.PORT || 3000;
 
