@@ -113,68 +113,75 @@ const FEDAPAY_PUBLIC_KEY = "pk_live_McGxiTj5lNJ7MPzCb_qDx-lW";
 
 const checkout = FedaPay.init({
 
-public_key: FEDAPAY_PUBLIC_KEY,
-environment: "live",
+  public_key: FEDAPAY_PUBLIC_KEY,
+  environment: "live",
 
-transaction: {
-amount: 100,
-description: "Formation Anim-Formation"
-},
+  transaction: {
+    amount: 100,
+    description: "Formation Anim-Formation"
+  },
 
-onComplete: async ({ reason, transaction }) => {
+  onComplete: async ({ reason, transaction }) => {
 
-if (reason === FedaPay.CHECKOUT_COMPLETED) {
+    if (reason === FedaPay.CHECKOUT_COMPLETED) {
 
-const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value;
+      const transaction_id = transaction.id;
 
-const transaction_id = transaction.id;
+      try {
 
-const res = await fetch("/confirm-payment",{
+        const res = await fetch("/confirm-payment",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            email:email,
+            transaction_id:transaction_id
+          })
+        });
 
-method:"POST",
+        const data = await res.json();
 
-headers:{
-"Content-Type":"application/json"
-},
+        if(data.success){
 
-body:JSON.stringify({
-email:email,
-transaction_id:transaction_id
-})
+          /* redirection confirmation */
+          window.location.href = "/confirmation.html";
+
+        }else{
+
+          alert("Erreur : " + data.error);
+
+        }
+
+      }catch(err){
+
+        console.error(err);
+        alert("Erreur serveur");
+
+      }
+
+    } else {
+
+      alert("Paiement annulé");
+
+    }
+
+  }
 
 });
 
-await res.json();
-
-/* redirection vers page confirmation */
-
-window.location.href = "/confirmation.html";
-
-}
-
-else{
-
-alert("Paiement annulé");
-
-}
-
-}
-
-});
 
 document.getElementById("btn-payer").addEventListener("click",()=>{
 
-const email=document.getElementById("email").value;
+  const email=document.getElementById("email").value;
 
-if(!email){
+  if(!email){
+    alert("Veuillez entrer votre email");
+    return;
+  }
 
-alert("Veuillez entrer votre email");
-
-return;
-
-}
-
-checkout.open();
+  checkout.open();
 
 });
 
