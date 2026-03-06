@@ -109,22 +109,16 @@ de vidéos animées et leur monétisation.
 
 <script>
 
-/* CONFIG FEDAPAY */
-
 const FEDAPAY_PUBLIC_KEY = "pk_live_McGxiTj5lNJ7MPzCb_qDx-lW";
 
 const checkout = FedaPay.init({
 
 public_key: FEDAPAY_PUBLIC_KEY,
-
 environment: "live",
 
 transaction: {
-
-amount: 10000,
-
+amount: 100,
 description: "Formation Anim-Formation"
-
 },
 
 onComplete: async ({ reason, transaction }) => {
@@ -135,27 +129,24 @@ const email = document.getElementById("email").value;
 
 const transaction_id = transaction.id;
 
-/* envoyer au serveur */
+const res = await fetch("/confirm-payment",{
 
-await fetch("/confirm-payment", {
+method:"POST",
 
-method: "POST",
-
-headers: {
+headers:{
 "Content-Type":"application/json"
 },
 
-body: JSON.stringify({
-
-email: email,
-
-transaction_id: transaction_id
-
+body:JSON.stringify({
+email:email,
+transaction_id:transaction_id
 })
 
 });
 
-/* redirection */
+await res.json();
+
+/* redirection vers page confirmation */
 
 window.location.href = "/confirmation.html";
 
@@ -171,10 +162,9 @@ alert("Paiement annulé");
 
 });
 
+document.getElementById("btn-payer").addEventListener("click",()=>{
 
-document.getElementById("btn-payer").addEventListener("click", () => {
-
-const email = document.getElementById("email").value;
+const email=document.getElementById("email").value;
 
 if(!email){
 

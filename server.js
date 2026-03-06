@@ -37,13 +37,43 @@ app.post("/confirm-payment", async (req,res)=>{
 
 const {email,transaction_id} = req.body;
 
-if(!email) return res.sendStatus(400);
+if(!email || !transaction_id){
+return res.status(400).json({error:"Données manquantes"});
+}
+
+try{
+
+/* vérifier paiement chez FedaPay */
+
+const response = await axios.get(
+
+`https://api.fedapay.com/v1/transactions/${transaction_id}`,
+
+{
+headers:{
+Authorization:`Bearer ${process.env.FEDAPAY_SECRET}`
+}
+}
+
+);
+
+const transaction = response.data.transaction;
+
+/* vérifier statut */
+
+if(transaction.status !== "approved"){
+
+return res.status(400).json({
+error:"Paiement non validé"
+});
+
+}
 
 /* créer token sécurisé */
 
 const token = crypto.randomBytes(32).toString("hex");
 
-/* enregistrer */
+/* enregistrer utilisateur */
 
 db.run(
 
@@ -59,7 +89,7 @@ console.log(err);
 return res.sendStatus(500);
 }
 
-/* email */
+/* envoyer email */
 
 const transporter = nodemailer.createTransport({
 
@@ -72,10 +102,11 @@ pass:process.env.EMAIL_PASS
 
 });
 
+const accessLink = `https://anim-formation.onrender.com/formation/${token}`;
+
 await transporter.sendMail({
 
 from:"Anim-Formation",
-
 to:email,
 
 subject:"Votre accès Anim-Formation 🎉",
@@ -84,21 +115,40 @@ html:`
 
 <h2>Paiement confirmé</h2>
 
+<p>Merci pour votre achat.</p>
+
 <p>Accédez à votre formation :</p>
 
-<a href="https://anim-formation.onrender.com/formation/${token}">
+<a href="${accessLink}">
 Accéder à la formation
 </a>
+
+<p>Ce lien est personnel et valable 90 jours.</p>
 
 `
 
 });
 
-res.sendStatus(200);
+/* renvoyer lien formation */
+
+res.json({
+success:true,
+access_link:accessLink
+});
 
 }
 
 );
+
+}catch(err){
+
+console.log(err.response?.data || err);
+
+res.status(500).json({
+error:"Erreur vérification paiement"
+});
+
+}
 
 });
 
