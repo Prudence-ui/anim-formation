@@ -1,192 +1,98 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Paiement - Anim-Formation</title>
-
 <link rel="stylesheet" href="css/style.css">
-
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
-
 </head>
-
 <body>
 
 <header class="header">
-<div class="logo">ANIM</div>
-
-<nav>
-<a href="index.html">Accueil</a>
-<a href="contact.html">Contact</a>
-</nav>
+  <div class="logo">ANIM</div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="contact.html">Contact</a>
+  </nav>
 </header>
 
-
 <section class="payment-section">
-
-<div class="payment-card">
-
-<h1>Finaliser votre inscription</h1>
-
-<p class="payment-description">
-Vous êtes à un pas d'accéder à la formation complète pour apprendre à créer
-et monétiser des vidéos animées.
-</p>
-
-<div class="price-recap">
-<p>Formation complète Anim-Formation</p>
-<h2>20€ / 10 000 FCFA</h2>
-</div>
-
-<input
-type="email"
-id="email"
-placeholder="Votre email"
-required
-class="input-field"
->
-
-<button id="btn-payer" class="btn-main">
-💳 Payer maintenant
-</button>
-
-<p class="secure-text">
-Paiement sécurisé via FedaPay (Carte bancaire & Mobile Money)
-</p>
-
-</div>
-
+  <div class="payment-card">
+    <h1>Finaliser votre inscription</h1>
+    <p class="payment-description">
+      Vous êtes à un pas d'accéder à la formation complète pour apprendre à créer
+      et monétiser des vidéos animées.
+    </p>
+    <div class="price-recap">
+      <p>Formation complète Anim-Formation</p>
+      <h2>20€ / 10 000 FCFA</h2>
+    </div>
+    <input type="email" id="email" placeholder="Votre email" required class="input-field">
+    <button id="btn-payer" class="btn-main">💳 Payer maintenant</button>
+    <p class="secure-text">Paiement sécurisé via FedaPay (Carte bancaire & Mobile Money)</p>
+  </div>
 </section>
 
-
 <footer class="footer">
-
-<div class="footer-container">
-
-<div class="footer-col">
-<h3>Anim-Formation</h3>
-<p>
-Plateforme spécialisée dans l’apprentissage de la création
-de vidéos animées et leur monétisation.
-</p>
-</div>
-
-<div class="footer-col">
-<h4>Navigation</h4>
-<ul>
-<li><a href="index.html">Accueil</a></li>
-<li><a href="formation.html">Formation</a></li>
-<li><a href="apropos.html">À propos</a></li>
-<li><a href="contact.html">Contact</a></li>
-</ul>
-</div>
-
-<div class="footer-col">
-<h4>Informations légales</h4>
-<ul>
-<li><a href="cgv.html">Conditions Générales de Vente</a></li>
-<li><a href="confidentialite.html">Politique de Confidentialité</a></li>
-</ul>
-</div>
-
-<div class="footer-col">
-<h4>Contact</h4>
-<p>Email : contact@anim-formation.com</p>
-<p>Disponible 7j/7</p>
-</div>
-
-</div>
-
-<div class="footer-bottom">
-<p>© 2026 Anim-Formation — Tous droits réservés</p>
-</div>
-
+  <div class="footer-container">
+    <div class="footer-col">
+      <h3>Anim-Formation</h3>
+      <p>Plateforme spécialisée dans l’apprentissage de la création de vidéos animées et leur monétisation.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="formation.html">Formation</a></li>
+        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Anim-Formation — Tous droits réservés</p>
+  </div>
 </footer>
 
-
 <script>
-
 const FEDAPAY_PUBLIC_KEY = "pk_live_McGxiTj5lNJ7MPzCb_qDx-lW";
-
 const checkout = FedaPay.init({
+  public_key: FEDAPAY_PUBLIC_KEY,
+  environment: "live",
+  transaction: {
+    amount: 100,
+    description: "Formation Anim-Formation"
+  },
+  onComplete: async ({ reason, transaction }) => {
+    if (reason === FedaPay.CHECKOUT_COMPLETED) {
+      const email = document.getElementById("email").value;
+      if (!email) return alert("Veuillez entrer votre email");
 
-public_key:FEDAPAY_PUBLIC_KEY,
-
-environment:"live",
-
-transaction:{
-amount:100,
-description:"Formation Anim-Formation"
-},
-
-onComplete: async ({reason,transaction})=>{
-
-if(reason===FedaPay.CHECKOUT_COMPLETED){
-
-const email=document.getElementById("email").value;
-
-try{
-
-const res = await fetch("/confirm-payment",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-email:email,
-transaction_id:transaction.id
-
-})
-
+      try {
+        const res = await fetch("/confirm-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, transaction_id: transaction.id })
+        });
+        const data = await res.json();
+        if (data.success) {
+          // ✅ Redirection vers confirmation
+          window.location.href = "/confirmation.html";
+        } else {
+          alert("Erreur : " + data.error);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Erreur serveur");
+      }
+    } else {
+      alert("Paiement annulé");
+    }
+  }
 });
 
-const data=await res.json();
-
-if(data.success){
-
-window.location.href="/confirmation.html";
-
-}else{
-
-alert(data.error);
-
-}
-
-}catch(err){
-
-alert("Erreur serveur");
-
-}
-
-}
-
-}
-
-});
-
-document.getElementById("btn-payer").onclick=()=>{
-
-const email=document.getElementById("email").value;
-
-if(!email){
-
-alert("Entrez votre email");
-return;
-
-}
-
-checkout.open();
-
-};
-
-
+document.getElementById("btn-payer").onclick = () => checkout.open();
 </script>
 
 </body>
