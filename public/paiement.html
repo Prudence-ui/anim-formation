@@ -57,42 +57,58 @@
 
 <script>
 const FEDAPAY_PUBLIC_KEY = "pk_live_McGxiTj5lNJ7MPzCb_qDx-lW";
+
+// Initialise FedaPay checkout
 const checkout = FedaPay.init({
   public_key: FEDAPAY_PUBLIC_KEY,
   environment: "live",
   transaction: {
-    amount: 100,
+    amount: 100, // montant en centimes si FedaPay l'exige
     description: "Formation Anim-Formation"
   },
   onComplete: async ({ reason, transaction }) => {
     if (reason === FedaPay.CHECKOUT_COMPLETED) {
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       if (!email) return alert("Veuillez entrer votre email");
 
       try {
+        // Envoi des données au serveur
         const res = await fetch("/confirm-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, transaction_id: transaction.id })
+          body: JSON.stringify({
+            email,
+            transaction_id: transaction.id
+          })
         });
+
         const data = await res.json();
+
         if (data.success) {
           // ✅ Redirection vers confirmation
           window.location.href = "/confirmation.html";
         } else {
-          alert("Erreur : " + data.error);
+          alert("Erreur : " + (data.error || "Paiement non confirmé"));
         }
       } catch (err) {
-        console.error(err);
-        alert("Erreur serveur");
+        console.error("Erreur fetch /confirm-payment :", err);
+        alert("Erreur serveur, veuillez réessayer plus tard");
       }
     } else {
-      alert("Paiement annulé");
+      alert("Paiement annulé ou échoué");
     }
   }
 });
 
-document.getElementById("btn-payer").onclick = () => checkout.open();
+// Bouton "Payer maintenant"
+document.getElementById("btn-payer").onclick = () => {
+  const email = document.getElementById("email").value.trim();
+  if (!email) {
+    alert("Veuillez entrer votre email");
+    return;
+  }
+  checkout.open();
+};
 </script>
 
 </body>
