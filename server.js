@@ -32,7 +32,7 @@ const link = `https://anim-formation.onrender.com/formation/${token}`
 try{
 
 await resend.emails.send({
-from:"Anim-Formation <onboarding@resend.dev>",
+from:"Anim-Formation <tchidiprudence7@gmail.com>",
 to:email,
 subject:"Accès à votre formation",
 html:`
@@ -198,5 +198,18 @@ const PORT=process.env.PORT||3000
 app.listen(PORT,()=>{
 
 console.log("Serveur lancé sur port",PORT)
+
+})
+
+app.get("/test-email", async (req,res)=>{
+
+await resend.emails.send({
+from:"Anim Formation <onboarding@resend.dev>",
+to:"TONEMAIL@gmail.com",
+subject:"Test email",
+html:"Test réussi"
+})
+
+res.send("Email envoyé")
 
 })
