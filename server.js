@@ -1,192 +1,191 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const axios = require("axios");
-const sqlite3 = require("sqlite3").verbose();
-const crypto = require("crypto");
-const { Resend } = require("resend");
-require("dotenv").config();
+const express = require("express")
+const bodyParser = require("body-parser")
+const axios = require("axios")
+const sqlite3 = require("sqlite3").verbose()
+const crypto = require("crypto")
+const { Resend } = require("resend")
+require("dotenv").config()
 
-const app = express();
-app.use(bodyParser.json());
-app.use(express.static("public"));
+const app = express()
 
-// ----- RESEND -----
-const resend = new Resend(process.env.RESEND_API_KEY);
+app.use(bodyParser.json())
+app.use(express.static("public"))
 
-// ----- DATABASE -----
-const db = new sqlite3.Database("./database.db");
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+const db = new sqlite3.Database("./database.db")
 
 db.run(`
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS users(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 email TEXT UNIQUE,
 token TEXT,
 paid INTEGER DEFAULT 0,
 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )
-`);
+`)
 
-// ----- FONCTION ENVOI EMAIL -----
-async function envoyerEmail(email, token) {
+async function envoyerEmail(email,token){
 
-const accessLink = `https://anim-formation.onrender.com/formation/${token}`;
+const link = `https://anim-formation.onrender.com/formation/${token}`
 
-try {
+try{
 
 await resend.emails.send({
-from: "Anim-Formation <onboarding@resend.dev>",
-to: email,
-subject: "Votre accès à Anim-Formation 🎉",
-html: `
-<h2>Paiement confirmé 🎉</h2>
+from:"Anim-Formation <onboarding@resend.dev>",
+to:email,
+subject:"Accès à votre formation",
+html:`
+<h2>Paiement confirmé</h2>
 
 <p>Merci pour votre achat.</p>
 
-<p>Accédez à votre formation ici :</p>
+<p>Accédez à votre formation :</p>
 
-<a href="${accessLink}">
+<a href="${link}">
 Accéder à la formation
 </a>
 
-<p>Ce lien est personnel et valable 90 jours.</p>
+<p>Accès valable 90 jours.</p>
 `
-});
+})
 
-console.log("EMAIL envoyé à", email);
+console.log("EMAIL ENVOYE",email)
 
-} catch (err) {
+}catch(err){
 
-console.log("ERREUR ENVOI EMAIL", err);
-
-}
+console.log("ERREUR EMAIL",err)
 
 }
 
-// ----- CONFIRM PAYMENT (appel JS) -----
-app.post("/confirm-payment", async (req, res) => {
+}
 
-const { email, transaction_id } = req.body;
+app.post("/confirm-payment",async(req,res)=>{
 
-if (!email || !transaction_id)
-return res.status(400).json({ error: "Données manquantes" });
+const {email,transaction_id}=req.body
 
-try {
+if(!email||!transaction_id)
+return res.status(400).json({error:"Données manquantes"})
+
+try{
 
 const response = await axios.get(
 `https://api.fedapay.com/v1/transactions/${transaction_id}`,
 {
-headers: {
-Authorization: `Bearer ${process.env.FEDAPAY_SECRET}`
+headers:{
+Authorization:`Bearer ${process.env.FEDAPAY_SECRET}`
 }
 }
-);
+)
 
-const transaction = response.data.transaction;
+const transaction = response.data.transaction
 
-if (!transaction || transaction.status !== "approved")
-return res.status(400).json({ error: "Paiement non validé" });
+if(!transaction || transaction.status!=="approved"){
 
-const token = crypto.randomBytes(32).toString("hex");
+return res.json({error:"Paiement non validé"})
+
+}
+
+const token = crypto.randomBytes(32).toString("hex")
 
 db.run(
-`INSERT OR REPLACE INTO users (email, token, paid) VALUES (?, ?, 1)`,
-[email, token],
-async () => {
+`INSERT OR REPLACE INTO users(email,token,paid) VALUES(?,?,1)`,
+[email,token],
+async()=>{
 
-await envoyerEmail(email, token);
+await envoyerEmail(email,token)
 
-res.json({ success: true });
-
-}
-);
-
-} catch (error) {
-
-console.log("Erreur confirm-payment", error);
-
-res.status(500).json({ error: "Erreur serveur" });
+res.json({success:true})
 
 }
+)
 
-});
+}catch(err){
 
-// ----- WEBHOOK FEDAPAY -----
-app.post("/webhook", async (req, res) => {
+console.log(err)
 
-console.log("WEBHOOK RECU :", req.body);
+res.status(500).json({error:"Erreur serveur"})
 
-try {
+}
 
-if (
-req.body.entity === "transaction" &&
-req.body.action === "approved"
-) {
+})
 
-const transaction = req.body.data;
+app.post("/webhook",async(req,res)=>{
 
-const email = transaction.customer.email;
+console.log("WEBHOOK",req.body)
 
-const token = crypto.randomBytes(32).toString("hex");
+try{
+
+if(
+req.body.entity==="transaction" &&
+req.body.action==="approved"
+){
+
+const transaction = req.body.data
+
+const email = transaction.metadata?.email
+
+if(!email){
+return res.sendStatus(200)
+}
+
+const token = crypto.randomBytes(32).toString("hex")
 
 db.run(
-`INSERT OR REPLACE INTO users (email, token, paid) VALUES (?, ?, 1)`,
-[email, token],
-async () => {
+`INSERT OR REPLACE INTO users(email,token,paid) VALUES(?,?,1)`,
+[email,token],
+async()=>{
 
-await envoyerEmail(email, token);
+await envoyerEmail(email,token)
 
-console.log("Paiement validé via webhook pour", email);
-
-}
-);
+console.log("Paiement confirmé webhook",email)
 
 }
-
-res.sendStatus(200);
-
-} catch (err) {
-
-console.log("ERREUR WEBHOOK", err);
-
-res.sendStatus(500);
+)
 
 }
 
-});
+res.sendStatus(200)
 
-// ----- ACCES FORMATION -----
-app.get("/formation/:token", (req, res) => {
+}catch(err){
 
-const token = req.params.token;
+console.log(err)
+
+res.sendStatus(500)
+
+}
+
+})
+
+app.get("/formation/:token",(req,res)=>{
+
+const token=req.params.token
 
 db.get(
 "SELECT * FROM users WHERE token=? AND paid=1",
 [token],
-(err, row) => {
+(err,row)=>{
 
-if (!row) return res.send("Accès refusé");
+if(!row) return res.send("Accès refusé")
 
-const created = new Date(row.created_at);
-const now = new Date();
+const created=new Date(row.created_at)
+const now=new Date()
 
-const diffDays =
-(now - created) / (1000 * 60 * 60 * 24);
+const diff=(now-created)/(1000*60*60*24)
 
-if (diffDays > 90)
-return res.send("Votre accès a expiré");
+if(diff>90) return res.send("Accès expiré")
 
-res.sendFile(__dirname + "/public/formation-privee.html");
+res.sendFile(__dirname+"/public/formation-privee.html")
 
 }
-);
+)
 
-});
+})
 
-// ----- SERVER -----
-const PORT = process.env.PORT || 3000;
+const PORT=process.env.PORT||3000
 
-app.listen(PORT, () => {
+app.listen(PORT,()=>{
 
-console.log("Serveur lancé sur port " + PORT);
+console.log("Serveur lancé sur port",PORT)
 
-});
+})
