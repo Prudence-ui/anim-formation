@@ -205,7 +205,7 @@ app.get("/test-email", async (req,res)=>{
 
 await resend.emails.send({
 from:"Anim Formation <onboarding@resend.dev>",
-to:"TONEMAIL@gmail.com",
+to:"tchidiprudence7@gmail.com",
 subject:"Test email",
 html:"Test réussi"
 })
