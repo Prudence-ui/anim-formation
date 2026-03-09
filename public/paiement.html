@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Paiement - Anim-Formation</title>
+
 <link rel="stylesheet" href="css/style.css">
 
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
 
 </head>
+
 <body>
 
 <header class="header">
+
 <div class="logo">ANIM</div>
+
 <nav>
 <a href="index.html">Accueil</a>
 <a href="contact.html">Contact</a>
 </nav>
+
 </header>
 
 <section class="payment-section">
+
 <div class="payment-card">
 
 <h1>Finaliser votre inscription</h1>
@@ -30,8 +38,11 @@ Vous êtes à un pas d'accéder à la formation complète pour apprendre
 </p>
 
 <div class="price-recap">
+
 <p>Formation complète Anim-Formation</p>
+
 <h2>10 000 FCFA</h2>
+
 </div>
 
 <input
@@ -43,7 +54,9 @@ class="input-field"
 />
 
 <button id="btn-payer" class="btn-main">
+
 💳 Payer maintenant
+
 </button>
 
 <p class="secure-text">
@@ -51,23 +64,29 @@ Paiement sécurisé via FedaPay
 </p>
 
 </div>
+
 </section>
 
 <footer class="footer">
+
 <p>© 2026 Anim-Formation</p>
+
 </footer>
 
 <script>
 
-const PUBLIC_KEY = "pk_live_McGxiTj5lNJ7MPzCb_qDx-lW";
+const PUBLIC_KEY = "pk_live_McGxiTj5lNJ7MPzCb_qDx-lW"
 
 document.getElementById("btn-payer").onclick = () => {
 
-const email = document.getElementById("email").value.trim();
+const email = document.getElementById("email").value.trim()
 
 if(!email){
-alert("Veuillez entrer votre email");
-return;
+
+alert("Veuillez entrer votre email")
+
+return
+
 }
 
 const checkout = FedaPay.init({
@@ -77,65 +96,38 @@ public_key: PUBLIC_KEY,
 environment: "live",
 
 transaction: {
+
 amount: 100,
+
 description: "Formation Anim-Formation",
+
 metadata: {
+
 email: email
+
 }
+
 },
 
 onComplete: ({reason, transaction}) => {
 
 if(reason === FedaPay.CHECKOUT_COMPLETED){
 
-setTimeout(async ()=>{
+window.location.href="/confirmation.html"
 
-try{
+}else{
 
-const res = await fetch("/confirm-payment",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-email:email,
-transaction_id:transaction.id
+alert("Paiement annulé")
+
+}
+
+}
+
 })
-});
 
-const data = await res.json();
-
-if(data.success){
-
-window.location.href="/confirmation.html";
-
-}else{
-
-alert("Erreur : "+data.error);
+checkout.open()
 
 }
-
-}catch(err){
-
-alert("Erreur serveur");
-
-}
-
-},4000);
-
-}else{
-
-alert("Paiement annulé");
-
-}
-
-}
-
-});
-
-checkout.open();
-
-};
 
 </script>
 
