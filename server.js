@@ -78,13 +78,21 @@ Authorization:`Bearer ${process.env.FEDAPAY_SECRET}`
 }
 )
 
-const transaction = response.data.transaction
+console.log("REPONSE FEDAPAY:",response.data)
 
-if(!transaction || transaction.status!=="approved"){
+const transaction = response.data.transaction || response.data["v1/transaction"]
 
-return res.json({error:"Paiement non validé"})
-
+if(!transaction){
+return res.json({error:"Transaction introuvable"})
 }
+
+if(transaction.status !== "approved"){
+return res.json({error:"Paiement non validé"})
+}
+
+console.log("Transaction ID :",transaction_id)
+console.log("FedaPay data :",response.data)
+
 
 const token = crypto.randomBytes(32).toString("hex")
 
@@ -114,6 +122,9 @@ app.post("/webhook",async(req,res)=>{
 
 console.log("WEBHOOK",req.body)
 
+console.log("ACTION:", req.body.action)
+console.log("ENTITY:", req.body.entity)
+
 try{
 
 if(
@@ -123,7 +134,7 @@ req.body.action==="approved"
 
 const transaction = req.body.data
 
-const email = transaction.metadata?.email
+const email = transaction.metadata ? transaction.metadata.email : null
 
 if(!email){
 return res.sendStatus(200)
