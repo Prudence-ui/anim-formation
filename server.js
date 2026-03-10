@@ -41,7 +41,7 @@ try{
 
 await resend.emails.send({
 
-from:"Anim-Formation <tchidiprudence7@gmail.com>",
+from:"Anim-Formation <onboarding@resend.dev>",
 
 to:email,
 
@@ -77,59 +77,55 @@ console.log("ERREUR EMAIL :",err)
 
 }
 
-app.post("/webhook",async(req,res)=>{
+app.post("/webhook", async (req, res) => {
 
-console.log("WEBHOOK RECU :",req.body)
+console.log("WEBHOOK RECU :", req.body)
 
 try{
 
-if(
+const transaction =
+req.body.entity ||
+req.body.data ||
+req.body
 
-req.body.entity === "transaction" &&
+if(!transaction) {
+return res.sendStatus(200)
+}
 
-req.body.action === "approved"
+if(transaction.status !== "approved"){
+console.log("Transaction non approuvée")
+return res.sendStatus(200)
+}
 
-){
-
-const transaction = req.body.data
-
-const email = transaction.metadata ? transaction.metadata.email : null
+const email =
+transaction.customer?.email ||
+transaction.metadata?.email ||
+transaction.custom_metadata?.email ||
+null
 
 if(!email){
-
-console.log("EMAIL ABSENT METADATA")
-
+console.log("EMAIL INTROUVABLE")
 return res.sendStatus(200)
-
 }
 
 const token = crypto.randomBytes(32).toString("hex")
 
 db.run(
-
 `INSERT OR REPLACE INTO users(email,token,paid) VALUES(?,?,1)`,
-
 [email,token],
-
 async(err)=>{
 
 if(err){
-
 console.log("DB ERROR",err)
-
 return
-
 }
 
 await envoyerEmail(email,token)
 
-console.log("PAIEMENT CONFIRME :",email)
+console.log("EMAIL ENVOYE :",email)
 
 }
-
 )
-
-}
 
 res.sendStatus(200)
 

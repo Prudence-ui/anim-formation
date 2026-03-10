@@ -96,20 +96,19 @@ public_key: PUBLIC_KEY,
 environment: "live",
 
 transaction: {
-
 amount: 100,
-
 description: "Formation Anim-Formation",
-
 metadata: {
-
 email: email
-
 }
-
 },
 
-onComplete: ({reason, transaction}) => {
+customer: {
+email: email
+},
+
+
+onComplete: ({reason}) => {
 
 if(reason === FedaPay.CHECKOUT_COMPLETED){
 
