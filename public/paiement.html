@@ -16,14 +16,12 @@
 <body>
 
 <header class="header">
-
 <div class="logo">ANIM</div>
 
 <nav>
 <a href="index.html">Accueil</a>
 <a href="contact.html">Contact</a>
 </nav>
-
 </header>
 
 <section class="payment-section">
@@ -33,16 +31,12 @@
 <h1>Finaliser votre inscription</h1>
 
 <p class="payment-description">
-Vous êtes à un pas d'accéder à la formation complète pour apprendre
-à créer et monétiser des vidéos animées.
+Accédez immédiatement à la formation complète.
 </p>
 
 <div class="price-recap">
-
 <p>Formation complète Anim-Formation</p>
-
 <h2>10 000 FCFA</h2>
-
 </div>
 
 <input
@@ -54,9 +48,7 @@ class="input-field"
 />
 
 <button id="btn-payer" class="btn-main">
-
 💳 Payer maintenant
-
 </button>
 
 <p class="secure-text">
@@ -68,9 +60,7 @@ Paiement sécurisé via FedaPay
 </section>
 
 <footer class="footer">
-
 <p>© 2026 Anim-Formation</p>
-
 </footer>
 
 <script>
@@ -82,31 +72,29 @@ document.getElementById("btn-payer").onclick = () => {
 const email = document.getElementById("email").value.trim()
 
 if(!email){
-
 alert("Veuillez entrer votre email")
-
 return
-
 }
 
 const checkout = FedaPay.init({
 
 public_key: PUBLIC_KEY,
-
 environment: "live",
 
 transaction: {
+
 amount: 100,
 description: "Formation Anim-Formation",
+
 metadata: {
 email: email
 }
+
 },
 
 customer: {
 email: email
 },
-
 
 onComplete: ({reason}) => {
 
