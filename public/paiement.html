@@ -96,11 +96,25 @@ customer: {
 email: email
 },
 
-onComplete: ({reason}) => {
+onComplete: async ({reason, transaction}) => {
 
 if(reason === FedaPay.CHECKOUT_COMPLETED){
 
+// on envoie la transaction au serveur
+await fetch("/envoyer-acces",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
+email: email,
+transaction_id: transaction.id
+})
+})
+
+setTimeout(()=>{
 window.location.href="/confirmation.html"
+},1000)
 
 }else{
 

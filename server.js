@@ -105,3 +105,53 @@ app.listen(PORT,()=>{
 console.log("Serveur lancé sur port",PORT)
 
 })
+
+const fetch = require("node-fetch")
+
+const FEDAPAY_SECRET = process.env.FEDAPAY_SECRET_KEY
+
+app.post("/envoyer-acces", async (req,res)=>{
+
+try{
+
+const {email, transaction_id} = req.body
+
+if(!email || !transaction_id){
+return res.status(400).send("Données manquantes")
+}
+
+// vérification du paiement chez FedaPay
+const response = await fetch(
+`https://api.fedapay.com/v1/transactions/${transaction_id}`,
+{
+headers:{
+Authorization:`Bearer ${FEDAPAY_SECRET}`
+}
+})
+
+const data = await response.json()
+
+const status = data.v1?.status
+
+if(status !== "approved"){
+
+console.log("PAIEMENT NON APPROUVE :", status)
+
+return res.send("Paiement non confirmé")
+
+}
+
+// paiement validé → email envoyé
+await envoyerEmail(email)
+
+res.send("EMAIL ENVOYE")
+
+}catch(err){
+
+console.log("ERREUR VERIFICATION :", err)
+
+res.status(500).send("Erreur serveur")
+
+}
+
+})
