@@ -102,7 +102,7 @@ if(reason === FedaPay.CHECKOUT_COMPLETED){
 
 try{
 
-const response = await fetch("/envoyer-acces",{
+const response = await fetch("https://anim-formation.onrender.com/envoyer-acces",{
 
 method:"POST",
 
@@ -119,7 +119,7 @@ transaction_id: transaction.id
 
 const result = await response.text()
 
-console.log(result)
+console.log("REPONSE SERVEUR :", result)
 
 if(result === "EMAIL_ENVOYE"){
 
@@ -133,7 +133,9 @@ alert("Paiement confirmé mais erreur d'envoi email. Contactez le support.")
 
 }catch(err){
 
-alert("Erreur serveur")
+console.log("ERREUR FETCH :", err)
+
+alert("Erreur connexion serveur")
 
 }
 
