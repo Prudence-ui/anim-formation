@@ -10,12 +10,14 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-
 const FEDAPAY_SECRET = process.env.FEDAPAY_SECRET_KEY
 
 
 
-// ENVOI EMAIL
+// ===============================
+// FONCTION ENVOI EMAIL
+// ===============================
+
 async function envoyerEmail(email){
 
 try{
@@ -29,7 +31,7 @@ to: email,
 subject: "Accès à votre formation",
 
 html: `
-<h2>Paiement confirmé</h2>
+<h2>Paiement confirmé 🎉</h2>
 
 <p>Merci pour votre achat.</p>
 
@@ -48,7 +50,6 @@ console.log("RESEND RESPONSE :", response)
 }catch(err){
 
 console.log("ERREUR EMAIL :", err)
-throw err
 
 }
 
@@ -56,7 +57,10 @@ throw err
 
 
 
-// ROUTE APPELEE APRES PAIEMENT
+// =================================
+// ROUTE VERIFICATION PAIEMENT
+// =================================
+
 app.post("/envoyer-acces", async (req,res)=>{
 
 try{
@@ -98,7 +102,6 @@ console.log("REPONSE FEDAPAY :", JSON.stringify(data,null,2))
 
 
 
-// RECUPERATION TRANSACTION FIABLE
 let transaction = null
 
 if(data.v1){
@@ -108,6 +111,8 @@ transaction = data.v1
 if(data.transaction){
 transaction = data.transaction
 }
+
+
 
 if(!transaction){
 
@@ -119,14 +124,15 @@ return res.send("ERREUR")
 
 
 
-// VERIFICATION STATUT
 const status = transaction.status
 
 console.log("STATUT TRANSACTION :", status)
 
+
+
 if(status !== "approved"){
 
-console.log("PAIEMENT PAS ENCORE APPROUVE")
+console.log("PAIEMENT PAS APPROUVE")
 
 return res.send("ERREUR")
 
@@ -134,10 +140,9 @@ return res.send("ERREUR")
 
 
 
-// ENVOI EMAIL
 await envoyerEmail(email)
 
-console.log("EMAIL ENVOYE AVEC SUCCES")
+console.log("EMAIL ENVOYE VIA /envoyer-acces")
 
 return res.send("EMAIL_ENVOYE")
 
@@ -153,28 +158,107 @@ return res.status(500).send("ERREUR")
 
 
 
+// =================================
+// WEBHOOK FEDAPAY
+// =================================
+
+app.post("/webhook", async (req,res)=>{
+
+try{
+
+console.log("WEBHOOK RECU :", JSON.stringify(req.body,null,2))
+
+const event = req.body
+
+if(!event.entity){
+
+console.log("ENTITY INTROUVABLE")
+
+return res.sendStatus(200)
+
+}
+
+const transaction = event.entity
+
+
+
+if(transaction.status !== "approved"){
+
+console.log("STATUT NON APPROUVE :", transaction.status)
+
+return res.sendStatus(200)
+
+}
+
+
+
+let email = null
+
+
+
+if(transaction.metadata){
+
+let meta = transaction.metadata
+
+if(typeof meta === "string"){
+meta = JSON.parse(meta)
+}
+
+email = meta.email
+
+}
+
+
+
+if(!email && transaction.customer){
+
+email = transaction.customer.email
+
+}
+
+
+
+if(!email){
+
+console.log("EMAIL INTROUVABLE")
+
+return res.sendStatus(200)
+
+}
+
+
+
+await envoyerEmail(email)
+
+console.log("EMAIL ENVOYE VIA WEBHOOK")
+
+res.sendStatus(200)
+
+}catch(err){
+
+console.log("ERREUR WEBHOOK :", err)
+
+res.sendStatus(500)
+
+}
+
+})
+
+
+
+// =================================
 // TEST EMAIL
+// =================================
+
 app.get("/test-email", async (req,res)=>{
 
 try{
 
-await resend.emails.send({
-
-from:"Anim Formation <onboarding@resend.dev>",
-
-to:"tchidiprudence7@gmail.com",
-
-subject:"Test email",
-
-html:"Email test fonctionne"
-
-})
+await envoyerEmail("tchidiprudence7@gmail.com")
 
 res.send("email envoyé")
 
 }catch(err){
-
-console.log("ERREUR TEST EMAIL :", err)
 
 res.send("erreur")
 
