@@ -100,21 +100,42 @@ onComplete: async ({reason, transaction}) => {
 
 if(reason === FedaPay.CHECKOUT_COMPLETED){
 
-// on envoie la transaction au serveur
-await fetch("/envoyer-acces",{
+try{
+
+const response = await fetch("/envoyer-acces",{
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/json"
 },
+
 body: JSON.stringify({
 email: email,
 transaction_id: transaction.id
 })
+
 })
 
-setTimeout(()=>{
+const result = await response.text()
+
+console.log(result)
+
+if(result === "EMAIL_ENVOYE"){
+
 window.location.href="/confirmation.html"
-},1000)
+
+}else{
+
+alert("Paiement confirmé mais erreur d'envoi email. Contactez le support.")
+
+}
+
+}catch(err){
+
+alert("Erreur serveur")
+
+}
 
 }else{
 
