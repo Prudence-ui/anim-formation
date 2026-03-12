@@ -129,3 +129,21 @@ app.listen(PORT,()=>{
 console.log("Serveur lancé sur port",PORT)
 
 })
+
+app.get("/test-email", async (req,res)=>{
+
+await resend.emails.send({
+
+from:"Anim Formation <onboarding@resend.dev>",
+
+to:"tchidiprudence7@gmail.com",
+
+subject:"Test email",
+
+html:"Email test fonctionne"
+
+})
+
+res.send("email envoyé")
+
+})
