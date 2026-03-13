@@ -80,6 +80,7 @@ return res.status(400).send("ERREUR")
 
 
 // APPEL API FEDAPAY
+
 const response = await fetch(
 
 `https://api.fedapay.com/v1/transactions/${transaction_id}`,
@@ -159,7 +160,7 @@ return res.status(500).send("ERREUR")
 
 
 // =================================
-// WEBHOOK FEDAPAY
+// WEBHOOK FEDAPAY CORRIGÉ
 // =================================
 
 app.post("/webhook", async (req,res)=>{
@@ -169,22 +170,21 @@ try{
 console.log("WEBHOOK RECU :", JSON.stringify(req.body,null,2))
 
 const event = req.body
+const transaction = event.entity
 
-if(!event.entity){
+if(!transaction){
 
-console.log("ENTITY INTROUVABLE")
+console.log("TRANSACTION INTROUVABLE")
 
 return res.sendStatus(200)
 
 }
 
-const transaction = event.entity
-
 
 
 if(transaction.status !== "approved"){
 
-console.log("STATUT NON APPROUVE :", transaction.status)
+console.log("STATUT :", transaction.status)
 
 return res.sendStatus(200)
 
@@ -196,24 +196,26 @@ let email = null
 
 
 
-if(transaction.metadata){
+// 1️⃣ email dans metadata.email
 
-let meta = transaction.metadata
-
-if(typeof meta === "string"){
-meta = JSON.parse(meta)
-}
-
-email = meta.email
-
+if(transaction.metadata?.email){
+email = transaction.metadata.email
 }
 
 
 
-if(!email && transaction.customer){
+// 2️⃣ email dans metadata.paid_customer.email
 
+if(!email && transaction.metadata?.paid_customer?.email){
+email = transaction.metadata.paid_customer.email
+}
+
+
+
+// 3️⃣ email dans customer.email
+
+if(!email && transaction.customer?.email){
 email = transaction.customer.email
-
 }
 
 
@@ -228,9 +230,17 @@ return res.sendStatus(200)
 
 
 
+console.log("EMAIL TROUVE :", email)
+
+
+
 await envoyerEmail(email)
 
+
+
 console.log("EMAIL ENVOYE VIA WEBHOOK")
+
+
 
 res.sendStatus(200)
 
