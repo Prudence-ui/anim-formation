@@ -37,7 +37,7 @@ html: `
 
 <p>Cliquez ci-dessous pour accéder à votre formation :</p>
 
-<a href="https://anim-formation.onrender.com/formation-privee.html">
+<a href="https://anim-formation.vercel.app/formation-privee.html">
 Accéder à la formation
 </a>
 `
