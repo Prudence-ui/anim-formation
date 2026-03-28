@@ -165,28 +165,26 @@ Anim-Formation
 
 <h2>Modules de la formation</h2>
 
-<div class="module" onclick="loadVideo('videos/module1.mp4','Introduction à la création de vidéos animées')">
-Module 1 — Introduction
+<div class="module" onclick="loadVideo('videos/module1.mp4','Comment transformer un texte en audio gratuitement',1)">
+    Module 1 — Comment transformer un texte en audio gratuitement. 
 </div>
 
-<div class="module" onclick="loadVideo('videos/module2.mp4','Créer votre premier personnage animé')">
-Module 2 — Création de personnage
+<div class="module" onclick="loadVideo('videos/module2.mp4','Créer votre premier personnage animé manuellement')">
+Module 2 — Comment crée des parodies à partir de contenus audio.
 </div>
 
-<div class="module" onclick="loadVideo('videos/module3.mp4','Animation et mouvements')">
-Module 3 — Animation
+<div class="module" onclick="loadVideo('videos/module3.mp4','Module 3 — Comment animer une image avec l\'IA',3)">
+Module 3 — Comment animé une image avec l'IA.
 </div>
 
-<div class="module" onclick="loadVideo('videos/module4.mp4','Montage et optimisation')">
-Module 4 — Montage
+
+<div class="module" onclick="loadVideo('videos/module4.mp4','Apprendre sur le montage et zoom dynamique',4)">
+Module 4 — Montage Zoom.
 </div>
 
-<div class="module" onclick="loadVideo('videos/module5.mp4','Stratégies de monétisation')">
+
+<div class="module" onclick="loadVideo('videos/module5.mp4','Module 5 — Bonus : Monétiser ses vidéos',5)">
 Module 5 — Monétisation
-</div>
-
-<div class="module" onclick="loadVideo('videos/module6.mp4','Comment gagner vos premiers 200€ avec ces vidéos')">
-Module 6 — Bonus
 </div>
 
 </div>
@@ -263,42 +261,455 @@ document.addEventListener("contextmenu", e => e.preventDefault());
 
 <script>
 
-function loadVideo(video,title){
+function loadVideo(video,title,module){
 
 document.getElementById("lesson-video").src = video;
-
 document.getElementById("lesson-title").innerText = title;
+
+let content = "";
+
+if(module === 1){
+
+content = `
+<h2>🎤 INTRODUCTION</h2>
+<p>
+Bonjour et bienvenue dans ce tutoriel.<br><br>
+
+Aujourd’hui, je vais te montrer comment transformer facilement un texte en audio gratuitement grâce à 
+<a href="https://ttsmaker.com" target="_blank" style="color:#22c55e;">TTSMaker</a>.<br><br>
+
+Même si tu es débutant, ne t’inquiète pas, je vais t’expliquer chaque étape de A à Z, de manière simple et claire.
+</p>
+
+<h2>🌐 ÉTAPE 1 : ACCÉDER AU SITE</h2>
+<p>
+Ouvre ton navigateur internet, comme Chrome ou Safari.<br><br>
+Dans la barre de recherche, tape TTSMaker, puis clique sur le site officiel.<a href="https://ttsmaker.com" target="_blank" style="color:#22c55e;">TTSMaker</a>.<br><br>
+Une fois sur la page d’accueil, tu verras une interface simple avec une grande zone de texte.
+</p>
+
+<h2>🧩 ÉTAPE 2 : COMPRENDRE L’INTERFACE</h2>
+<ul>
+<li>Une grande zone pour écrire ou coller ton texte</li>
+<li>Un menu pour choisir la langue</li>
+<li>Une liste de voix disponibles</li>
+<li>Un bouton pour générer l’audio</li>
+</ul>
+
+<h2>✍️ ÉTAPE 3 : ÉCRIRE OU COLLER TON TEXTE</h2>
+<p>
+Clique dans la zone de texte.<br><br>
+Tu peux écrire ou coller un texte déjà prêt.<br><br>
+Exemple :<br><br>
+<em>"Bienvenue dans ce tutoriel. Aujourd’hui, vous allez apprendre à transformer du texte en audio."</em>
+</p>
+
+<h2>🌍 ÉTAPE 4 : CHOISIR LA LANGUE</h2>
+<p>
+Sélectionne la langue correspondant à ton texte.<br><br>
+Par exemple, choisis français si ton texte est en français.
+</p>
+
+<h2>🎙️ ÉTAPE 5 : CHOISIR UNE VOIX</h2>
+<ul>
+<li>Voix masculine</li>
+<li>Voix féminine</li>
+</ul>
+
+<h2>⚙️ ÉTAPE 6 : AJUSTER LES PARAMÈTRES</h2>
+<ul>
+<li>Vitesse de lecture</li>
+<li>Ton de la voix</li>
+</ul>
+
+<h2>▶️ ÉTAPE 7 : GÉNÉRER L’AUDIO</h2>
+<p>
+Clique sur le bouton Convertir ou Generate.<br><br>
+Attends quelques secondes.
+</p>
+
+<h2>🔊 ÉTAPE 8 : ÉCOUTER LE RÉSULTAT</h2>
+<p>
+Clique sur Play pour écouter ton audio.<br><br>
+Vérifie la qualité.
+</p>
+
+<h2>⬇️ ÉTAPE 9 : TÉLÉCHARGER L’AUDIO</h2>
+<ul>
+<li>Cliquer sur Download</li>
+<li>Enregistrer le fichier</li>
+</ul>
+
+<p>
+Tu peux utiliser cet audio pour :
+</p>
+
+<ul>
+<li>Des vidéos</li>
+<li>Des podcasts</li>
+<li>Les réseaux sociaux</li>
+</ul>
+
+<h2>💡 ASTUCES IMPORTANTES</h2>
+<ul>
+<li>Utilise des phrases courtes</li>
+<li>Ajoute des virgules</li>
+<li>Teste plusieurs voix</li>
+</ul>
+
+<h2>🎉 CONCLUSION</h2>
+<p>
+Et voilà, tu sais maintenant comment transformer un texte en audio avec TTSMaker.
+</p>
+`;
+
+}
+
+else if(module === 3){
+
+content = `
+<h2>🎓 Formation complète : Créer une image qui parle avec ChatGPT et HeyGen</h2>
+
+<h2>🎯 Objectif de la formation</h2>
+<p>
+Dans cette leçon, tu vas apprendre à créer une image animée qui parle, de A à Z, en utilisant ChatGPT et HeyGen.<br><br>
+À la fin de cette formation, tu seras capable de produire des vidéos professionnelles sans caméra, sans micro et sans compétences techniques avancées.
+</p>
+
+<h2>🧩 Étape 1 : Créer l’image avec ChatGPT</h2>
+<p>
+Pour commencer, rends-toi sur ChatGPT.<br><br>
+
+Une fois sur la plateforme, tu dois uploader une image simple.<br>
+Il peut s’agir d’un dessin, d’une parodie ou de n’importe quel style visuel que tu souhaites reproduire.<br><br>
+
+Ensuite, colle ce prompt :
+</p>
+
+<p style="background:#020617;padding:15px;border-radius:8px;">
+« Génère-moi une image de bande dessinée dans le style de cette image, avec un personnage dans un bureau sombre mais lumineux, très esthétique, assis au bord de son bureau, face caméra, tout en restant élégant et charismatique. »
+</p>
+
+<p>
+ChatGPT va alors générer une nouvelle image basée sur ton modèle.<br><br>
+
+👉 Une fois le résultat affiché, télécharge l’image sur ton appareil.
+</p>
+
+<h3>💡 Astuce</h3>
+<p>
+Tu peux modifier le prompt selon le rendu que tu souhaites obtenir (style, ambiance, posture, décor, etc.).
+</p>
+
+<h2>🎭 Étape 2 : Animer l’image avec HeyGen</h2>
+<p>
+Une fois ton image téléchargée, rends-toi sur le site HeyGen.<br><br>
+
+Importe ensuite l’image que tu viens de créer avec ChatGPT.<br><br>
+
+Maintenant, tu vas ajouter le prompt d’animation suivant :
+</p>
+
+<h3>🎬 Prompt à utiliser dans HeyGen</h3>
+
+<p style="background:#020617;padding:15px;border-radius:8px;">
+Anime uniquement le personnage en lui faisant effectuer des gestes naturels (mouvements des yeux, des mains, des bras ou des doigts), en parfaite synchronisation avec le texte.<br><br>
+
+Les expressions et les gestes doivent être cohérents avec le ton et le sens du message.<br><br>
+
+Ne fais apparaître aucun texte écrit à l’écran (pas de sous-titres).<br><br>
+
+Le personnage doit dicter le texte à voix haute, avec une intonation dynamique, engageante et naturelle, comme dans une vidéo promotionnelle.<br><br>
+
+Voici le texte à dicter: 👉 Écris ici le texte que ton personnage doit dire
+</p>
+
+<h2>🎥 Étape 3 : Générer et récupérer la vidéo</h2>
+
+<ul>
+<li>Lance la génération de la vidéo</li>
+<li>Attends que HeyGen traite ton contenu</li>
+<li>Télécharge la vidéo finale une fois prête</li>
+</ul>
+
+<p>
+Et voilà, ton image est maintenant animée et parle comme un vrai présentateur 🎉
+</p>
+
+<h2>🚀 Conclusion</h2>
+
+<p>
+En combinant ChatGPT pour la création visuelle et HeyGen pour l’animation, tu peux créer des vidéos professionnelles en seulement quelques minutes.
+</p>
+
+<p>C’est une méthode puissante pour :</p>
+
+<ul>
+<li>Créer du contenu sur les réseaux sociaux</li>
+<li>Faire des vidéos marketing</li>
+<li>Lancer une formation ou présenter un produit</li>
+</ul>
+
+<h2>💡 Conseil final</h2>
+
+<p>
+Plus ton texte est naturel et engageant, plus ton personnage paraîtra réaliste.<br><br>
+
+Teste différents styles, différentes voix et différents tons pour trouver ce qui correspond le mieux à ton objectif.
+</p>
+`;
+}
+
+else if(module === 4){
+
+content = `
+<h2>🎤 INTRODUCTION</h2>
+<p>
+Bonjour et bienvenue dans ce tutoriel.<br><br>
+
+Aujourd’hui, tu vas apprendre comment créer des <strong>zooms dynamiques et professionnels</strong> dans tes vidéos d’animation, comme sur TikTok ou Reels.<br><br>
+
+Pour cela, nous allons utiliser une application simple et puissante : <strong>CapCut</strong>.
+</p>
+
+<h2>🔥 POURQUOI UTILISER LES ZOOMS</h2>
+<ul>
+<li>Attirer l’attention</li>
+<li>Mettre en valeur un détail</li>
+<li>Rendre la vidéo dynamique</li>
+<li>Augmenter la rétention</li>
+</ul>
+
+<h2>📱 ÉTAPE 1 : OUVRIR CAPCUT</h2>
+<p>
+Ouvre l’application CapCut.<br><br>
+Clique sur <strong>Nouveau projet</strong>.<br><br>
+Ajoute ta vidéo dans la timeline.
+</p>
+
+<h2>🎞️ ÉTAPE 2 : SÉLECTIONNER LA VIDÉO</h2>
+<p>
+Clique sur la vidéo dans la timeline pour la sélectionner.
+</p>
+
+<h2>🎯 ÉTAPE 3 : COMPRENDRE LES KEYFRAMES</h2>
+<p>
+Les keyframes (losange ♦️) permettent de créer des mouvements comme le zoom.<br><br>
+Chaque point représente une position de l’image.
+</p>
+
+<h2>🎬 ÉTAPE 4 : CRÉER UN ZOOM</h2>
+<ul>
+<li>Place le curseur au début</li>
+<li>Clique sur ♦️</li>
+<li>Avance dans la vidéo</li>
+<li>Clique encore sur ♦️</li>
+<li>Zoome avec les doigts</li>
+</ul>
+
+<p>
+Le zoom se crée automatiquement entre les deux points.
+</p>
+
+<h2>⚡ ÉTAPE 5 : VITESSE DU ZOOM</h2>
+<ul>
+<li>Points proches = zoom rapide</li>
+<li>Points éloignés = zoom lent</li>
+</ul>
+
+<h2>🔁 ÉTAPE 6 : ZOOM + DÉZOOM</h2>
+<ul>
+<li>Ajoute 2 nouveaux points</li>
+<li>Remets la taille normale</li>
+</ul>
+
+<p>
+Effet obtenu : <strong>zoom → maintien → dézoom</strong>
+</p>
+
+<h2>🎨 ÉTAPE 7 : AMÉLIORER LE RENDU</h2>
+<ul>
+<li>Ajouter du texte</li>
+<li>Ajouter des sons</li>
+<li>Synchroniser avec la vidéo</li>
+<li>Zoom uniquement sur les moments importants</li>
+</ul>
+
+<h2>💡 ASTUCES IMPORTANTES</h2>
+<ul>
+<li>Ne pas abuser des zooms</li>
+<li>Garder un mouvement fluide</li>
+<li>Tester plusieurs styles</li>
+</ul>
+
+<h2>🎉 CONCLUSION</h2>
+<p>
+Et voilà, tu sais maintenant comment créer des zooms dynamiques dans tes vidéos avec CapCut.
+</p>
+`;
+
+}
+
+
+else if(module === 5){
+
+content = `
+<h2>💰 Monétiser ses vidéos de parodie</h2>
+
+<h2>💰 1. Revenus des plateformes (monétisation directe)</h2>
+
+<h3>▶️ YouTube</h3>
+<ul>
+<li>Programme Partenaire (publicités)</li>
+<li>Revenus des Shorts</li>
+<li>Super Chats et abonnements payants</li>
+</ul>
+
+<p style="color:#f87171;">
+⚠️ Attention : si tu utilises un audio existant, la monétisation peut être revendiquée par le détenteur des droits (Content ID).
+</p>
+
+<h3>▶️ TikTok</h3>
+<ul>
+<li>Fonds pour créateurs</li>
+<li>Creativity Program (vidéos longues)</li>
+<li>Cadeaux en live</li>
+</ul>
+
+<p>
+👉 Les parodies fonctionnent très bien ici, mais les revenus directs sont souvent plus faibles que sur YouTube.
+</p>
+
+<h3>▶️ Facebook / Instagram</h3>
+<ul>
+<li>In-stream ads (Facebook)</li>
+<li>Bonus Reels (selon pays)</li>
+<li>Abonnements</li>
+</ul>
+
+<hr>
+
+<h2>🤝 2. Partenariats & placements de produits</h2>
+
+<p>
+Même avec des parodies :
+</p>
+
+<ul>
+<li>Tu peux intégrer une marque dans ton sketch</li>
+<li>Faire du placement produit humoristique</li>
+</ul>
+
+<p>
+💡 Exemple : une parodie où un produit devient un élément comique.
+</p>
+
+<hr>
+
+<h2>🧑‍🎤 3. Droits et transformation (très important)</h2>
+
+<ul>
+<li>Si tu utilises l’audio original → risque de démonétisation ou blocage</li>
+<li>Si tu modifies fortement l’audio → plus de contrôle</li>
+</ul>
+
+<p><strong>👉 Solution recommandée :</strong></p>
+
+<ul>
+<li>Recréer l’audio toi-même</li>
+<li>Utiliser des sons libres de droits</li>
+</ul>
+
+<hr>
+
+<h2>🛍️ 4. Produits dérivés (merch)</h2>
+
+<ul>
+<li>T-shirts avec tes punchlines</li>
+<li>Casquettes, stickers</li>
+<li>Produits liés à tes personnages</li>
+</ul>
+
+<hr>
+
+<h2>💸 5. Plateformes de soutien</h2>
+
+<h3>▶️ Patreon</h3>
+<ul>
+<li>Abonnements mensuels</li>
+<li>Contenu exclusif</li>
+</ul>
+
+<h3>▶️ Ko-fi</h3>
+<ul>
+<li>Dons ponctuels</li>
+</ul>
+
+<hr>
+
+<h2>🎤 6. Prestations externes</h2>
+
+<ul>
+<li>Animation d’événements</li>
+<li>Création de contenu pour des marques</li>
+<li>Spectacles ou stand-up</li>
+</ul>
+
+<hr>
+
+<h2>📈 7. Licence & réutilisation de contenu</h2>
+
+<ul>
+<li>Des pages médias peuvent payer pour republier tes vidéos</li>
+<li>Licensing de tes contenus</li>
+</ul>
+
+<hr>
+
+<h2 style="color:#f87171;">⚠️ Le point critique : les droits d’auteur</h2>
+
+<ul>
+<li>Tu peux perdre 100% des revenus publicitaires</li>
+<li>Ta vidéo peut être bloquée dans certains pays</li>
+</ul>
+
+<p><strong>👉 Le vrai levier :</strong></p>
+
+<ul>
+<li>✔ Transformer fortement (parodie claire)</li>
+<li>✔ Ajouter ta propre valeur (jeu, montage, scénario)</li>
+<li>✔ Ne pas dépendre uniquement des revenus pub</li>
+</ul>
+
+<hr>
+
+<h2>🔑 Conclusion</h2>
+
+<ul>
+<li>Visibilité sur TikTok / Instagram</li>
+<li>Monétisation plus stable sur YouTube</li>
+</ul>
+`;
+}
+
+
+
+else{
+
+content = `
+<p style="color:#94a3b8;">
+Le contenu de ce module sera bientôt disponible.
+</p>
+`;
+
+}
+
+document.getElementById("lesson-text").innerHTML = content;
 
 window.scrollTo({
 top:0,
 behavior:"smooth"
 });
-
-}
-
-</script>
-
-<script>
-
-document.addEventListener("contextmenu", e => e.preventDefault());
-
-document.onkeydown = function(e) {
-
-if (e.keyCode == 123) {
-return false;
-}
-
-if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
-return false;
-}
-
-if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
-return false;
-}
-
-if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
-return false;
-}
 
 }
 
